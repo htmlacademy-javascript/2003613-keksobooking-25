@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-
 const avatarNum = () => {
   const n = getRandomPositiveInteger(1, 10);
   return (n < 10) ? (`0${n}`) : n;
