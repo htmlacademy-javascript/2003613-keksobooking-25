@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 const avatarNum = () => {
   const n = getRandomPositiveInteger(1, 10);
