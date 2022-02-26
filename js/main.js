@@ -92,4 +92,6 @@ const generateOffer = () => ({
   },
 });
 const OFFERS_COUNT = 10;
-const OFFERS = Array.from({ length: OFFERS_COUNT }, generateOffer);
+const getDataSet = (collback, count) => { Array.from({ length: count }, collback); };
+
+getDataSet(generateOffer, OFFERS_COUNT);
