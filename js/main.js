@@ -92,5 +92,5 @@ const generateOffer = () => ({
   },
 });
 const OFFERS_COUNT = 10;
-const getDataSet = Array.from({ length: OFFERS_COUNT }, generateOffer);
-getDataSet.forEach((element) => toString(element));// чтобы линтер не ругался
+const dataSet = Array.from({ length: OFFERS_COUNT }, generateOffer);
+dataSet.forEach((element) => toString(element));// чтобы линтер не ругался
