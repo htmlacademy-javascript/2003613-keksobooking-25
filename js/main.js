@@ -1,8 +1,8 @@
-const avatarNum = () => {
+const getAvatarNum = () => {
   const n = getRandomPositiveInteger(1, 10);
   return (n < 10) ? (`0${n}`) : n;
 };
-const avatarURL = `img/avatars/user${avatarNum()}.png`;
+const avatarURL = `img/avatars/user${getAvatarNum()}.png`;
 const LOCATION_DIGITS = 5;
 const LONGITUDE_RANGE = {
   min: 35.65,
@@ -92,6 +92,5 @@ const generateOffer = () => ({
   },
 });
 const OFFERS_COUNT = 10;
-const getDataSet = (collback, count) => { Array.from({ length: count }, collback); };
-
-getDataSet(generateOffer, OFFERS_COUNT);
+const getDataSet = Array.from({ length: OFFERS_COUNT }, generateOffer);
+getDataSet.forEach((element) => toString(element));// чтобы линтер не ругался
