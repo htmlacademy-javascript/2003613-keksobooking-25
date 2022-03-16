@@ -17,9 +17,7 @@ const LATITUDE_RANGE = {
 };
 const longitude = getRandomPositiveFloat(LATITUDE_RANGE.min, LATITUDE_RANGE.max, LOCATION_DIGITS);
 const TITLE_CONTENTS = [
-  'Заголовок 1',
-  'Заголовок 2',
-  'Заголовок 3'];
+  ''];
 const PRICE_RANGE = {
   min: 10000,
   max: 50000
@@ -46,7 +44,7 @@ const PHOTOS_LIST = [
   'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/brandon-hoogenboom-SNxQGWxZQi0.jpg',
   'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/claire-rendall-b6kAwr1i0Iw.jpg',
 ];
-const OFFERS_COUNT = 1;
+const OFFERS_COUNT = 10;
 
 export const createDataSet = function() {
   const makeOfferData = () => (
