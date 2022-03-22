@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import { POST_ADDRESS } from './enum-network.js';
 import { lodgingTypesMinPrice, } from './enum-data.js';
-import { getCursorPointCoordinate, getMapLoadStatus} from './map.js';
+import { getCursorPointCoordinate} from './map.js';
 
 const adForm = document.querySelector('.ad-form');
 const address = adForm.querySelector('#address');
@@ -53,22 +53,3 @@ roomCount.addEventListener('change', () => {
     syncSelectsByValue(roomCount, roomCapacity);
   }
 });
-
-// roomCapacity.addEventListener('change', () => {
-//   if (roomCapacity.value === '0') {
-//     roomCount.value = '100';
-//   } else {
-//     syncSelectsByValue(roomCapacity, roomCount);
-//   }
-// });
-
-// switch (roomCount.value) {
-//     case '100' :  roomCapacity.value = 0;
-//       break;
-//     case '1': roomCapacity.value = 1;
-//       break;
-//     case '2': roomCapacity.value = 2;
-//       break;
-//     case '3': roomCapacity.value = 3;
-//       break;
-//   }
