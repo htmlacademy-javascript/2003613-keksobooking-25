@@ -1,12 +1,21 @@
 /* eslint-disable no-console */
 import { createDataSet } from './data-fetch.js';
-const offerTypes = {
-  flat: 'Квартира',
-  bungalow: 'Бунгало',
-  house: 'Дом',
-  palace: 'Дворец',
-  hotel: 'Отель',
+import { LODGING_PROPERTIES } from './enum-data.js';
+
+const getCursorPointCoordinate = function() {
+  const coordinate = {
+    lat: 139.75,
+    lng: 35.68,
+  };
+  return coordinate;
 };
+
+const MAP_LOAD_STATUS = true;
+const getMapLoadStatus = function () {
+  return MAP_LOAD_STATUS;
+};
+
+const lodgingTypesText = Object.fromEntries(Object.entries(LODGING_PROPERTIES).map(([ key, val ]) => [ key, val.fieldText]));
 
 const offers = createDataSet(); //
 const cardsFragments = document.createDocumentFragment();
@@ -39,9 +48,9 @@ const makeCard = (offerItem, template) => {
   const type = card.querySelector('.popup__type');
   const offerType = () => {
     const typeValue =  offerItem.offer.type;
-    for (const key in offerTypes) {
+    for (const key in lodgingTypesText) {
       if (key === typeValue){
-        return offerTypes[key];
+        return lodgingTypesText[key];
       }
     }
   };
@@ -110,3 +119,5 @@ for (const item of offers){
 
 const mapCanvas = document.querySelector('#map-canvas');
 mapCanvas.appendChild(cardsFragments.children[0]);
+
+export {getCursorPointCoordinate, getMapLoadStatus};
