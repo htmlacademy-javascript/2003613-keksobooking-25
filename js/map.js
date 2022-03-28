@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { createDataSet } from './data-fetch.js';
 import { LODGING_PROPERTIES } from './enum-data.js';
 
@@ -58,24 +57,18 @@ const makeCard = (offerItem, template) => {
 
   const capacity = card.querySelector('.popup__text--capacity');
   const roomsNum = offerItem.offer.rooms;
-  const roomsString = () => {
+  const getRoomsString = () => {
     if (roomsNum === 1) {
       return 'комната';
     } else if (roomsNum < 5){
       return 'комнаты';
-    } else {
-      return 'комнат';
     }
+    return 'комнат';
   };
+
   const guestsNum = offerItem.offer.guests;
-  const guestsString = () => {
-    if (guestsNum === 1) {
-      return 'гостя';
-    } else {
-      return 'гостей';
-    }
-  };
-  capacity.innerHTML = `${roomsNum} ${roomsString()} для ${guestsNum} ${guestsString()}`;
+  const guestsString = (guestsNum === 1) ? 'гостя' : 'гостей';
+  capacity.innerHTML = `${roomsNum} ${getRoomsString()} для ${guestsNum} ${guestsString}`;
 
   const time = card.querySelector('.popup__text--time');
   const checinString = offerItem.offer.checkin;
