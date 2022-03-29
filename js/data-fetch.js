@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import {getRandomArrayItem, getRandomArrayRange, getRandomPositiveFloat, getRandomPositiveInteger} from './util.js';
 import {LODGING_PROPERTIES, FEATURES_TYPES, CHECKIN_TIMES, CHECHOUT_TIMES} from './enum-data.js';
 
