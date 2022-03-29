@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { POST_ADDRESS } from './enum-network.js';
 import { lodgingTypesMinPrice, } from './enum-data.js';
 import { getCursorPointCoordinate} from './map.js';
