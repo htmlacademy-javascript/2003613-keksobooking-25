@@ -1,4 +1,9 @@
 /* eslint-disable no-console */
+import {enableElements} from './util.js';
+
+const adForm = document.querySelector('.ad-form');
+const mapFilters = document.querySelector('.map__filters');
+
 const getCursorPointCoordinate = function() {
   const coordinate = {
     lat: 139.75,
@@ -13,9 +18,6 @@ const getMapLoadStatus = function () {
 };
 
 const map = L.map('map-canvas')
-  .on('load', () => {
-    console.log('карта загружена');
-  })
   .setView({
     lat: 35.652832,
     lng: 139.839478,
@@ -25,8 +27,27 @@ L.tileLayer(
   'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
   {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-    crossOrigin: false,
   },
 ).addTo(map);
+
+const marker = L.marker(
+  {
+    lat: 35.652832,
+    lng: 139.839478,
+  },
+  {
+    draggable: true,
+  },
+);
+
+marker.addTo(map);
+
+map.on('load', () => {
+  enableElements(adForm, mapFilters);
+});
+
+marker.on('moveend', (evt) => {
+  console.log(evt.target.getLatLng());
+});
 
 export {getCursorPointCoordinate, getMapLoadStatus};

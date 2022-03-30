@@ -1,4 +1,3 @@
-import '/pristine/pristine.min.js';
 import {
   isValidStringLength,
   isValidNumRange

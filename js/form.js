@@ -1,4 +1,4 @@
-/* eslint-disable no-console */
+import {disableElements} from './util.js';
 import { POST_ADDRESS } from './enum-network.js';
 import { lodgingTypesMinPrice, } from './enum-data.js';
 import { getCursorPointCoordinate} from './map.js';
@@ -23,36 +23,16 @@ const syncSelectsByValue = (selectFrom, selectTo) => {
 };
 const coordinate = getCursorPointCoordinate();
 
-const disableElements = (...elements) => {
-  for (const element of elements){
-    const elementChildren = element.children;
-    for (const child of elementChildren) {
-      child.setAttribute('disabled', true);
-    }
-    element.classList.add(`${element.classList[0]}--disabled`);
-  }
-};
-
-const enableElements = (...elements) => {
-  for (const element of elements){
-    const elementChildren = element.children;
-    for (const child of elementChildren) {
-      child.removeAttribute('disabled');
-    }
-    element.classList.remove(`${element.classList[0]}--disabled`);
-  }
-};
-
-disableElements(adForm, mapFilters);
-enableElements(adForm, mapFilters);
-
 document.addEventListener('DOMContentLoaded', () => {
-  const price = syncFieldsByKey(lodgingType, lodgingTypesMinPrice);
-  lodgingPrice.placeholder = price;
+  lodgingPrice.placeholder = syncFieldsByKey(lodgingType, lodgingTypesMinPrice);
   adForm.action = POST_ADDRESS;
   syncSelectsByValue(roomCount, roomCapacity);
   address.setAttribute('value', `широта: ${coordinate.lat}, долгота: ${coordinate.lng}`);
   address.setAttribute('readonly', true);
+});
+
+adForm.addEventListener('load', () => {
+  disableElements(adForm, mapFilters);
 });
 
 lodgingType.addEventListener('change', () => {
