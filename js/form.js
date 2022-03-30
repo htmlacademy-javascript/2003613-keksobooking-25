@@ -1,9 +1,9 @@
-/* eslint-disable no-console */
 import { POST_ADDRESS } from './enum-network.js';
 import { lodgingTypesMinPrice, } from './enum-data.js';
 import { getCursorPointCoordinate} from './map.js';
 
 const adForm = document.querySelector('.ad-form');
+const mapFilters = document.querySelector('.map__filters');
 const address = adForm.querySelector('#address');
 const lodgingType = adForm.querySelector('#type');
 const lodgingPrice = adForm.querySelector('#price');
@@ -21,6 +21,29 @@ const syncSelectsByValue = (selectFrom, selectTo) => {
   selectTo.value = selectFrom.value;
 };
 const coordinate = getCursorPointCoordinate();
+
+const disableElements = (...elements) => {
+  for (const element of elements){
+    const elementChildren = element.children;
+    for (const child of elementChildren) {
+      child.setAttribute('disabled', true);
+    }
+    element.classList.add(`${element.classList[0]}--disabled`);
+  }
+};
+
+const enableElements = (...elements) => {
+  for (const element of elements){
+    const elementChildren = element.children;
+    for (const child of elementChildren) {
+      child.removeAttribute('disabled');
+    }
+    element.classList.remove(`${element.classList[0]}--disabled`);
+  }
+};
+
+disableElements(adForm, mapFilters);
+enableElements(adForm, mapFilters);
 
 document.addEventListener('DOMContentLoaded', () => {
   const price = syncFieldsByKey(lodgingType, lodgingTypesMinPrice);
