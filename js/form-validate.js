@@ -32,9 +32,11 @@ const getTitleErrorMessage = (value) => {
   const symbolsCount = value.length;
   if (!symbolsCount) {
     return 'Заголовок не может быть пустым, введите минимум 30 символов.';
-  } else if (symbolsCount < 30) {
+  }
+  if (symbolsCount < 30) {
     return `Минимальная длина заголовка 30 символов, вы ввели всего ${symbolsCount}`;
-  } else if (symbolsCount > 100) {
+  }
+  if (symbolsCount > 100) {
     return `Максимальная длина заголовка 100 символов, вы ввели ${symbolsCount}`;
   }
 };
@@ -58,11 +60,14 @@ const getLodgingPriceErrorMessage = (value) => {
   const maxValue = lodgingTypesMaxPrice[inputType];
   if (value === '') {
     return 'Укажите стоимость аренды';
-  } else if (value === 0) {
+  }
+  if (value === 0) {
     return 'Так не бывает, попросите хоть что-то';
-  } else if (value < minValue) {
+  }
+  if (value < minValue) {
     return `Цена ниже рынка настораживает, просите минимум ${minValue}`;
-  } else if (value > maxValue) {
+  }
+  if (value > maxValue) {
     return `Серьерзно? ${value} руб. за ночь? С такой ценой вам на другую площадку.`;
   }
 };
@@ -87,9 +92,11 @@ const getRoomCapacityErrorMessage = (value) => {
   const roomCountValue = roomCount.value;
   if (value === '0' ) {
     return'А для кого?';
-  } else  if  (value > 0 && roomCountValue >= 100) {
+  }
+  if  (value > 0 && roomCountValue >= 100) {
     return 'Гости заблудятся, и вы их не найдете, выберите меньше комнат';
-  } else if (value >= roomCountValue) {
+  }
+  if (value >= roomCountValue) {
     return 'По одной комнате на человка.';
   }
 };
