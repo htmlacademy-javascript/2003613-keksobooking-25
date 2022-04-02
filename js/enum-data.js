@@ -43,6 +43,5 @@ const LODGING_PROPERTIES = {
 };
 const lodgingTypesMinPrice = Object.fromEntries(Object.entries(LODGING_PROPERTIES).map(([ key, val ]) => [ key, val.priceRange.min]));
 const lodgingTypesMaxPrice = Object.fromEntries(Object.entries(LODGING_PROPERTIES).map(([ key, val ]) => [ key, val.priceRange.max]));
-//const lodgingTypesPriceRange = Object.fromEntries(Object.entries(LODGING_PROPERTIES).map(([ key, val ]) => [ key, Object.fromEntries(Object.entries(val.priceRange).map(([ key1, val1 ]) => [ key1, val1]))]));
 
 export {CHECKIN_TIMES, CHECHOUT_TIMES, FEATURES_TYPES, LODGING_PROPERTIES, lodgingTypesMaxPrice, lodgingTypesMinPrice };
