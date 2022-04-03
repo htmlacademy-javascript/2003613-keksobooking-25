@@ -1,26 +1,35 @@
 /* eslint-disable no-console */
 import {enableElements} from './util.js';
+import { dataSet } from './data-fetch.js';
+import { createBalloonContent } from './map-balloon.js';
 
-const adForm = document.querySelector('.ad-form');
-const mapFilters = document.querySelector('.map__filters');
-
-const getCursorPointCoordinate = function() {
-  const coordinate = {
-    lat: 139.75,
-    lng: 35.68,
-  };
-  return coordinate;
+const initMapCoordinate = {
+  lat: 35.683792,
+  lng: 139.749698,
 };
+
+const initPinCoordinate = {
+  lat: 35.683792,
+  lng: 139.749698,
+};
+
+const mapFilters = document.querySelector('.map__filters');
+const adForm = document.querySelector('.ad-form');
+const address = adForm.querySelector('#address');
+
 
 const MAP_LOAD_STATUS = true;
 const getMapLoadStatus = function () {
   return MAP_LOAD_STATUS;
 };
+// const getPinCoordinate = function(pin) {
+//   return coordinate;
+// };
 
 const map = L.map('map-canvas')
   .setView({
-    lat: 35.652832,
-    lng: 139.839478,
+    lat: initMapCoordinate.lat,
+    lng: initMapCoordinate.lng,
   }, 13);
 
 L.tileLayer(
@@ -30,24 +39,67 @@ L.tileLayer(
   },
 ).addTo(map);
 
-const marker = L.marker(
+const mainPinIcon = L.icon({
+  iconUrl: './img/main-pin.svg',
+  iconSize: [52, 52],
+  iconAnchor: [26, 0],
+  // popupAnchor: [-3, -76],
+  //shadowUrl: 'my-icon-shadow.png',
+  shadowSize: [68, 95],
+  shadowAnchor: [22, 94]
+});
+
+const mainPin = L.marker(
   {
-    lat: 35.652832,
-    lng: 139.839478,
+    lat: initPinCoordinate.lat,
+    lng: initPinCoordinate.lng,
   },
   {
     draggable: true,
+    icon: mainPinIcon,
   },
 );
 
-marker.addTo(map);
+mainPin.addTo(map);
 
 map.on('load', () => {
   enableElements(adForm, mapFilters);
 });
 
-marker.on('moveend', (evt) => {
+mainPin.on('moveend', (evt) => {
   console.log(evt.target.getLatLng());
+  address.setAttribute('value', `широта: ${Number(evt.target.getLatLng().lat).toFixed(6)}, долгота: ${Number(evt.target.getLatLng().lng).toFixed(6)}`);
 });
 
-export {getCursorPointCoordinate, getMapLoadStatus};
+const offerPinGroup = L.layerGroup().addTo(map);
+
+const offerPinIcon = L.icon({
+  iconUrl: './img/pin.svg',
+  iconSize: [40, 40],
+  iconAnchor: [20, 0],
+  popupAnchor: [0, -6],
+});
+
+const createOfferPin = (offer) => {
+
+  const lat = offer.location.lat;
+  const lng = offer.location.lng;
+
+  const offerPin = L.marker({
+    lat,
+    lng,
+  },
+  {
+    icon: offerPinIcon,
+  },
+  );
+  offerPin
+    .addTo(offerPinGroup)
+    .bindPopup(createBalloonContent(offer));
+};
+
+dataSet.forEach((offer) => {
+  createOfferPin(offer);
+});
+
+export {initPinCoordinate, getMapLoadStatus};

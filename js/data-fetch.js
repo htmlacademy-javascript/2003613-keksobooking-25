@@ -2,7 +2,7 @@ import {getRandomArrayItem, getRandomArrayRange, getRandomPositiveFloat, getRand
 import {LODGING_PROPERTIES, FEATURES_TYPES, CHECKIN_TIMES, CHECHOUT_TIMES} from './enum-data.js';
 
 const OFFERS_COUNT = 10;
-const LOCATION_DIGITS = 5;
+const LOCATION_DIGITS = 6;
 const LONGITUDE_RANGE = {
   min: 35.65,
   max: 35.7,
@@ -47,35 +47,40 @@ const getAvatarURL = () => {
   return `img/avatars/user${AvatarNum}.png`;
 };
 
-const latitude = getRandomPositiveFloat(LONGITUDE_RANGE.min, LONGITUDE_RANGE.max, LOCATION_DIGITS);
-const longitude = getRandomPositiveFloat(LATITUDE_RANGE.min, LATITUDE_RANGE.max, LOCATION_DIGITS);
 
-const createDataSet = function() {
-  const makeOfferData = () => (
-    {
-      author: {
-        avatar: getAvatarURL(),
-      },
-      location: {
-        lat: latitude,
-        lng: longitude,
-      },
-      offer: {
-        title: getRandomArrayItem(TITLE_CONTENTS),
-        address: `${latitude}, ${longitude}`,
-        price: getRandomPositiveInteger(PRICE_RANGE.min, PRICE_RANGE.max),
-        type: getRandomArrayItem(lodgingTypes),
-        rooms: getRandomPositiveInteger(ROOMS_RANGE.min, ROOMS_RANGE.max),
-        guests: getRandomPositiveInteger(GUESTS_RANGE.min, GUESTS_RANGE.max),
-        checkin: getRandomArrayItem(CHECKIN_TIMES),
-        checkout: getRandomArrayItem(CHECHOUT_TIMES),
-        features: getRandomArrayRange(FEATURES_TYPES),
-        description: getRandomArrayItem(DESCRIPTION_CONTENT),
-        photos: getRandomArrayRange(PHOTOS_LIST),
-      },
-    }
-  );
-  return Array.from({ length: OFFERS_COUNT }, makeOfferData);
+const makeOfferData = () => {
+
+  const latitude = getRandomPositiveFloat(LONGITUDE_RANGE.min, LONGITUDE_RANGE.max, LOCATION_DIGITS);
+  const longitude = getRandomPositiveFloat(LATITUDE_RANGE.min, LATITUDE_RANGE.max, LOCATION_DIGITS);
+
+  return {
+    author: {
+      avatar: getAvatarURL(),
+    },
+    location: {
+      lat: latitude,
+      lng: longitude,
+    },
+    offer: {
+      title: getRandomArrayItem(TITLE_CONTENTS),
+      address: `${latitude}, ${longitude}`,
+      price: getRandomPositiveInteger(PRICE_RANGE.min, PRICE_RANGE.max),
+      type: getRandomArrayItem(lodgingTypes),
+      rooms: getRandomPositiveInteger(ROOMS_RANGE.min, ROOMS_RANGE.max),
+      guests: getRandomPositiveInteger(GUESTS_RANGE.min, GUESTS_RANGE.max),
+      checkin: getRandomArrayItem(CHECKIN_TIMES),
+      checkout: getRandomArrayItem(CHECHOUT_TIMES),
+      features: getRandomArrayRange(FEATURES_TYPES),
+      description: getRandomArrayItem(DESCRIPTION_CONTENT),
+      photos: getRandomArrayRange(PHOTOS_LIST),
+    },
+  };
 };
 
-export {createDataSet};
+const createDataSet = function(count, callback) {
+  return Array.from({ length: count }, callback);
+};
+
+const dataSet = createDataSet(OFFERS_COUNT, makeOfferData);
+
+export {dataSet};
