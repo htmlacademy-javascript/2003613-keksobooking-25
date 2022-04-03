@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import {enableElements} from './util.js';
 import { dataSet } from './data-fetch.js';
 import { createBalloonContent } from './map-balloon.js';
@@ -22,9 +21,6 @@ const MAP_LOAD_STATUS = true;
 const getMapLoadStatus = function () {
   return MAP_LOAD_STATUS;
 };
-// const getPinCoordinate = function(pin) {
-//   return coordinate;
-// };
 
 const map = L.map('map-canvas')
   .setView({
@@ -43,8 +39,6 @@ const mainPinIcon = L.icon({
   iconUrl: './img/main-pin.svg',
   iconSize: [52, 52],
   iconAnchor: [26, 0],
-  // popupAnchor: [-3, -76],
-  //shadowUrl: 'my-icon-shadow.png',
   shadowSize: [68, 95],
   shadowAnchor: [22, 94]
 });
@@ -67,7 +61,6 @@ map.on('load', () => {
 });
 
 mainPin.on('moveend', (evt) => {
-  console.log(evt.target.getLatLng());
   address.setAttribute('value', `широта: ${Number(evt.target.getLatLng().lat).toFixed(6)}, долгота: ${Number(evt.target.getLatLng().lng).toFixed(6)}`);
 });
 
@@ -81,10 +74,8 @@ const offerPinIcon = L.icon({
 });
 
 const createOfferPin = (offer) => {
-
   const lat = offer.location.lat;
   const lng = offer.location.lng;
-
   const offerPin = L.marker({
     lat,
     lng,

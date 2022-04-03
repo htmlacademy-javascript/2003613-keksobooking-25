@@ -83,7 +83,7 @@ lodgingPrice.addEventListener('blur', () => {
   formPristine.validate();
 });
 
-priceSlider.noUiSlider.on('update', () => {
+priceSlider.noUiSlider.on('slide', () => {
   formPristine.validate();
 });
 
@@ -106,7 +106,7 @@ const getRoomCapacityErrorMessage = (value) => {
     return 'Гости заблудятся, и вы их не найдете, выберите меньше комнат';
   }
   if (value >= roomCountValue) {
-    return 'По одной комнате на человка.';
+    return 'По одной комнате на человeка.';
   }
 };
 

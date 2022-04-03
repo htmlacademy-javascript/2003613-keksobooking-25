@@ -1,6 +1,5 @@
 import { LODGING_PROPERTIES } from './enum-data.js';
 
-
 const lodgingTypesText = Object.fromEntries(Object.entries(LODGING_PROPERTIES).map(([ key, val ]) => [ key, val.fieldText]));
 
 const hideEmptyElement = (element) => {

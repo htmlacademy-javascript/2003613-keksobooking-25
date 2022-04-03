@@ -125,4 +125,3 @@ roomCount.addEventListener('change', () => {
     syncSelectsByValue(roomCount, roomCapacity);
   }
 });
-
