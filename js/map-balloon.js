@@ -10,7 +10,8 @@ const hideEmptyElement = (element) => {
 
 const createBalloonContent = (offerItem) => {
 
-  const card = document.querySelector('#card').cloneNode(true).content;
+  const template = document.querySelector('#card').cloneNode(true).content;
+  const card = template.querySelector('.popup');
 
   const avatar = card.querySelector('.popup__avatar');
   avatar.src = offerItem.author.avatar;

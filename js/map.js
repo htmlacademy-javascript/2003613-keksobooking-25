@@ -70,7 +70,7 @@ const offerPinIcon = L.icon({
   iconUrl: './img/pin.svg',
   iconSize: [40, 40],
   iconAnchor: [20, 0],
-  popupAnchor: [0, -6],
+  popupAnchor: [0, 18],
 });
 
 const createOfferPin = (offer) => {
