@@ -12,10 +12,11 @@ const adForm = document.querySelector('.ad-form');
 const title = adForm.querySelector('#title');
 const lodgingType = adForm.querySelector('#type');
 const lodgingPrice = adForm.querySelector('#price');
+const priceSlider = adForm.querySelector('.ad-form__slider');
 const roomCount = adForm.querySelector('#room_number');
 const roomCapacity = adForm.querySelector('#capacity');
 
-const pristine = new Pristine(
+const formPristine = new Pristine(
   adForm,
   {
     classTo: 'ad-form__element',
@@ -41,7 +42,7 @@ const getTitleErrorMessage = (value) => {
   }
 };
 
-pristine.addValidator(
+formPristine.addValidator(
   title,
   validateTitle,
   getTitleErrorMessage
@@ -72,11 +73,19 @@ const getLodgingPriceErrorMessage = (value) => {
   }
 };
 
-pristine.addValidator(
+formPristine.addValidator(
   lodgingPrice,
   validateLodgingPrice,
   getLodgingPriceErrorMessage
 );
+
+lodgingPrice.addEventListener('blur', () => {
+  formPristine.validate();
+});
+
+priceSlider.noUiSlider.on('slide', () => {
+  formPristine.validate();
+});
 
 const validateRoomCapacity = (value) => {
   const roomCountValue = roomCount.value;
@@ -97,16 +106,17 @@ const getRoomCapacityErrorMessage = (value) => {
     return 'Гости заблудятся, и вы их не найдете, выберите меньше комнат';
   }
   if (value >= roomCountValue) {
-    return 'По одной комнате на человка.';
+    return 'По одной комнате на человeка.';
   }
 };
 
-pristine.addValidator(
+formPristine.addValidator(
   roomCapacity,
   validateRoomCapacity,
   getRoomCapacityErrorMessage
 );
 
-adForm.addEventListener('submit', () => {
-  pristine.validate();
+adForm.addEventListener('submit', (evt) => {
+  evt.preventDefault();
+  formPristine.validate();
 });

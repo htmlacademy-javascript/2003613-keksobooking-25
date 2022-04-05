@@ -1,6 +1,7 @@
+import {disableElements} from './util.js';
 import { POST_ADDRESS } from './enum-network.js';
-import { lodgingTypesMinPrice, } from './enum-data.js';
-import { getCursorPointCoordinate} from './map.js';
+import { lodgingTypesMinPrice,lodgingTypesMaxPrice,} from './enum-data.js';
+import { initPinCoordinate, } from './map.js';
 
 const adForm = document.querySelector('.ad-form');
 const mapFilters = document.querySelector('.map__filters');
@@ -11,52 +12,100 @@ const checkin = adForm.querySelector('#timein');
 const checkout = adForm.querySelector('#timeout');
 const roomCount = adForm.querySelector('#room_number');
 const roomCapacity = adForm.querySelector('#capacity');
+const priceSlider = adForm.querySelector('.ad-form__slider');
 
-const syncFieldsByKey = (valueFrom, valueEnum) => {
-  const keyName = valueFrom.value;
-  return valueEnum[keyName];
+const getPriceByLodgingType = (type, price) => {
+  const keyName = type.value;
+  return price[keyName];
 };
 
 const syncSelectsByValue = (selectFrom, selectTo) => {
   selectTo.value = selectFrom.value;
 };
-const coordinate = getCursorPointCoordinate();
 
-const disableElements = (...elements) => {
-  for (const element of elements){
-    const elementChildren = element.children;
-    for (const child of elementChildren) {
-      child.setAttribute('disabled', true);
-    }
-    element.classList.add(`${element.classList[0]}--disabled`);
-  }
+const getMinLodgingPrice = () => getPriceByLodgingType(lodgingType, lodgingTypesMinPrice);
+const getMaxLodgingPrice = () => getPriceByLodgingType(lodgingType, lodgingTypesMaxPrice);
+
+const initForm = () => {
+  adForm.action = POST_ADDRESS;
 };
 
-const enableElements = (...elements) => {
-  for (const element of elements){
-    const elementChildren = element.children;
-    for (const child of elementChildren) {
-      child.removeAttribute('disabled');
-    }
-    element.classList.remove(`${element.classList[0]}--disabled`);
-  }
+const initAddress = () => {
+  address.setAttribute('value', `широта: ${initPinCoordinate.lat}, долгота: ${initPinCoordinate.lng}`);
+  address.setAttribute('readonly', true);
 };
 
-disableElements(adForm, mapFilters);
-enableElements(adForm, mapFilters);
+const initLodgingPrice = () => {
+  lodgingPrice.placeholder = getMinLodgingPrice();
+  lodgingPrice.value = '';
+  lodgingPrice.setAttribute('min', 0);
+};
+
+const initRoomCountCapacity = () => {
+  syncSelectsByValue(roomCount, roomCapacity);
+};
 
 document.addEventListener('DOMContentLoaded', () => {
-  const price = syncFieldsByKey(lodgingType, lodgingTypesMinPrice);
-  lodgingPrice.placeholder = price;
-  adForm.action = POST_ADDRESS;
-  syncSelectsByValue(roomCount, roomCapacity);
-  address.setAttribute('value', `широта: ${coordinate.lat}, долгота: ${coordinate.lng}`);
-  address.setAttribute('readonly', true);
+  initForm();
+  initAddress();
+  initLodgingPrice();
+  initRoomCountCapacity();
+});
+
+adForm.addEventListener('load', () => {
+  disableElements(adForm, mapFilters);
+});
+
+noUiSlider.create(priceSlider, {
+  padding: [getMinLodgingPrice(), 0],
+  range: {
+    min: 0,
+    max: getMaxLodgingPrice(),
+  },
+  start: getMinLodgingPrice(),
+  step: 1,
+  connect: 'lower',
+  format: {
+    to: function (value) {
+      return value.toFixed(0);
+    },
+    from: function (value) {
+      return parseInt(value, 10);
+    },
+  },
+});
+
+const updateSliderPadding = (min, max) => {
+  priceSlider.noUiSlider.updateOptions({
+    padding: [min, max],
+  });};
+
+const updateSliderStart = (value) => {
+  priceSlider.noUiSlider.updateOptions({
+    start: value,
+  });};
+
+priceSlider.noUiSlider.on('start', () => {
+  updateSliderStart(getMinLodgingPrice());
+  updateSliderPadding(getMinLodgingPrice(), 0);
+});
+
+priceSlider.noUiSlider.on('slide', () => {
+  lodgingPrice.value = priceSlider.noUiSlider.get();
+});
+
+lodgingPrice.addEventListener('blur', () => {
+  updateSliderStart(lodgingPrice.value);
+  updateSliderPadding(lodgingPrice.value, 0);
+  priceSlider.noUiSlider.set(lodgingPrice.value);
 });
 
 lodgingType.addEventListener('change', () => {
-  const price = syncFieldsByKey(lodgingType, lodgingTypesMinPrice);
+  const price = getMinLodgingPrice();
   lodgingPrice.placeholder = price;
+  updateSliderPadding(price, 0);
+  updateSliderStart(price);
+  lodgingPrice.value = '';
 });
 
 checkin.addEventListener('change', () => {

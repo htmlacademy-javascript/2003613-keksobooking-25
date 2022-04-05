@@ -1,6 +1,4 @@
-import { createDataSet } from './data-fetch.js';
-import './map.js';
-import './form-validate.js';
+import './util.js';
 import './form.js';
-
-createDataSet();
+import './form-validate.js';
+import './map.js';
