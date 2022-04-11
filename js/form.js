@@ -1,8 +1,11 @@
 import {disableElements} from './util.js';
-import { POST_ADDRESS } from './enum-network.js';
+import { POST_ADDRESS } from './api.js';
 import { lodgingTypesMinPrice,lodgingTypesMaxPrice,} from './enum-data.js';
 import { initPinCoordinate, } from './map.js';
+import { formPristine } from './form-validate.js';
 
+
+const pageBody = document.querySelector('body');
 const adForm = document.querySelector('.ad-form');
 const mapFilters = document.querySelector('.map__filters');
 const address = adForm.querySelector('#address');
@@ -13,6 +16,8 @@ const checkout = adForm.querySelector('#timeout');
 const roomCount = adForm.querySelector('#room_number');
 const roomCapacity = adForm.querySelector('#capacity');
 const priceSlider = adForm.querySelector('.ad-form__slider');
+const successMessage = document.querySelector('#success').content.querySelector('.success').cloneNode(true);
+const errorMessage = document.querySelector('#error').content.cloneNode(true);
 
 const getPriceByLodgingType = (type, price) => {
   const keyName = type.value;
@@ -44,6 +49,29 @@ const initLodgingPrice = () => {
 const initRoomCountCapacity = () => {
   syncSelectsByValue(roomCount, roomCapacity);
 };
+
+const successHandlerRoutine = (message) => {
+  message.remove();
+  removeEventListener('click', document);
+  removeEventListener('keydown', document);
+  initAddress();
+  initLodgingPrice();
+  initRoomCountCapacity();
+};
+
+const successMessageHandler = function (message) {
+  document.addEventListener('click', successHandlerRoutine(message));
+  document.addEventListener('keydown', successHandlerRoutine(message));
+};
+
+const showMessage = (message, handler) => {
+  pageBody.appendChild(message);
+  handler(message);
+};
+
+// successMessage.addEventListener('click', () => {
+//   successMessage.remove();
+// });
 
 document.addEventListener('DOMContentLoaded', () => {
   initForm();
@@ -92,12 +120,14 @@ priceSlider.noUiSlider.on('start', () => {
 
 priceSlider.noUiSlider.on('slide', () => {
   lodgingPrice.value = priceSlider.noUiSlider.get();
+  //formPristine.validate();
 });
 
 lodgingPrice.addEventListener('blur', () => {
   updateSliderStart(lodgingPrice.value);
   updateSliderPadding(lodgingPrice.value, 0);
   priceSlider.noUiSlider.set(lodgingPrice.value);
+  formPristine.validate();
 });
 
 lodgingType.addEventListener('change', () => {
@@ -124,4 +154,10 @@ roomCount.addEventListener('change', () => {
   } else {
     syncSelectsByValue(roomCount, roomCapacity);
   }
+});
+
+adForm.addEventListener('submit', (evt) => {
+  evt.preventDefault();
+  showMessage(successMessage, successMessageHandler);
+  return console.log(formPristine.validate() + evt.target);//(validateForm()) ? console.log('OK') : console.log('NOT');
 });

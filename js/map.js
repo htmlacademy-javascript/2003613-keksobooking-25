@@ -1,5 +1,5 @@
 import {enableElements} from './util.js';
-import { dataSet } from './data-fetch.js';
+import { getData } from './api.js';
 import { createBalloonContent } from './map-balloon.js';
 
 const initMapCoordinate = {
@@ -89,8 +89,9 @@ const createOfferPin = (offer) => {
     .bindPopup(createBalloonContent(offer));
 };
 
-dataSet.forEach((offer) => {
+getData((dataSet) => {dataSet.forEach((offer) => {
   createOfferPin(offer);
-});
+});}
+);
 
 export {initPinCoordinate, getMapLoadStatus};
