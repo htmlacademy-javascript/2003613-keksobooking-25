@@ -16,12 +16,6 @@ const mapFilters = document.querySelector('.map__filters');
 const adForm = document.querySelector('.ad-form');
 const address = adForm.querySelector('#address');
 
-
-const MAP_LOAD_STATUS = true;
-const getMapLoadStatus = function () {
-  return MAP_LOAD_STATUS;
-};
-
 const map = L.map('map-canvas')
   .setView({
     lat: initMapCoordinate.lat,
@@ -53,6 +47,17 @@ const mainPin = L.marker(
     icon: mainPinIcon,
   },
 );
+
+const setMapDefault = () => {
+  const defaultLat = initMapCoordinate.lat;
+  const defaulLng = initMapCoordinate.lng;
+  map.closePopup();
+  map.setView({
+    lat: defaultLat,
+    lng: defaulLng,
+  });
+  mainPin.setLatLng([defaultLat,defaulLng])
+};
 
 mainPin.addTo(map);
 
@@ -94,4 +99,4 @@ getData((dataSet) => {dataSet.forEach((offer) => {
 });}
 );
 
-export {initPinCoordinate, getMapLoadStatus};
+export {initPinCoordinate, setMapDefault};
