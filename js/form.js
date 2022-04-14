@@ -209,10 +209,11 @@ adForm.addEventListener('submit', (evt) => {
   if (isValid){
     blockSubmitButton();
     sendData(
-      showMessage(successMessage, successMessageHandler),
-      showMessage(errorMessage, errorMessageHandler),
-      new FormData(evt.target),
+      () => {showMessage(successMessage, successMessageHandler);},
+      () => {showMessage(errorMessage, errorMessageHandler);},
+      adForm
     );
+    unblockSubmitButton();
   } else {
     showMessage(errorMessage, errorMessageHandler);
   }

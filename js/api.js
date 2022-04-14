@@ -13,17 +13,23 @@ const getData = (onSuccess, onFail) => {
     });
 };
 
-const sendData = (onSuccess, onFail, body) => {
-  fetch(POST_ADDRESS,
+const sendData = (onSuccess, onFail, data) => {
+  fetch(
+    POST_ADDRESS,
     {
       method: 'POST',
-      body,
+      body: new FormData(data),
     },
   )
-    .then((response) => response.json())
-    .then((dataSet) => {
-      onSuccess(dataSet);
+    .then((response) => {
+      if(response.ok) {
+        return onSuccess();
+      } else {
+        return onFail();
+      }
+    })
+    .catch(() => {
+      onFail();
     });
 };
-
 export {getData, sendData, POST_ADDRESS};
