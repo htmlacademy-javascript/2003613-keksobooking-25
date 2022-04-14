@@ -4,7 +4,6 @@ import { lodgingTypesMinPrice,lodgingTypesMaxPrice,} from './enum-data.js';
 import { initPinCoordinate, setMapDefault} from './map.js';
 import { formPristine } from './form-validate.js';
 
-const pageBody = document.querySelector('body');
 const adForm = document.querySelector('.ad-form');
 const mapFilters = document.querySelector('.map__filters');
 const address = adForm.querySelector('#address');
@@ -191,7 +190,7 @@ const errorMessageHandler = function (message) {
 };
 
 const showMessage = (message, handler) => {
-  pageBody.appendChild(message);
+  document.body.append(message);
   handler(message);
 };
 
