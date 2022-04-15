@@ -1,6 +1,6 @@
-import {enableElements} from './util.js';
-import { dataSet } from './data-fetch.js';
-import { createBalloonContent } from './map-balloon.js';
+import {enableElements, showAlert} from './util.js';
+import {getData} from './api.js';
+import {createBalloonContent} from './map-balloon.js';
 
 const initMapCoordinate = {
   lat: 35.683792,
@@ -12,15 +12,10 @@ const initPinCoordinate = {
   lng: 139.749698,
 };
 
+const mapContainer = document.querySelector('.map__canvas');
 const mapFilters = document.querySelector('.map__filters');
 const adForm = document.querySelector('.ad-form');
 const address = adForm.querySelector('#address');
-
-
-const MAP_LOAD_STATUS = true;
-const getMapLoadStatus = function () {
-  return MAP_LOAD_STATUS;
-};
 
 const map = L.map('map-canvas')
   .setView({
@@ -53,6 +48,17 @@ const mainPin = L.marker(
     icon: mainPinIcon,
   },
 );
+
+const setMapDefault = () => {
+  const defaultLat = initMapCoordinate.lat;
+  const defaulLng = initMapCoordinate.lng;
+  map.closePopup();
+  map.setView({
+    lat: defaultLat,
+    lng: defaulLng,
+  });
+  mainPin.setLatLng([defaultLat,defaulLng]);
+};
 
 mainPin.addTo(map);
 
@@ -89,8 +95,12 @@ const createOfferPin = (offer) => {
     .bindPopup(createBalloonContent(offer));
 };
 
-dataSet.forEach((offer) => {
-  createOfferPin(offer);
-});
+getData((dataSet) => {
+  dataSet.forEach((offer) => {
+    createOfferPin(offer);
+  });
+},
+(allertMessage) => {showAlert(allertMessage, mapContainer);}
+);
 
-export {initPinCoordinate, getMapLoadStatus};
+export {initPinCoordinate, setMapDefault};

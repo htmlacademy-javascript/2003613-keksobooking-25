@@ -12,7 +12,6 @@ const adForm = document.querySelector('.ad-form');
 const title = adForm.querySelector('#title');
 const lodgingType = adForm.querySelector('#type');
 const lodgingPrice = adForm.querySelector('#price');
-const priceSlider = adForm.querySelector('.ad-form__slider');
 const roomCount = adForm.querySelector('#room_number');
 const roomCapacity = adForm.querySelector('#capacity');
 
@@ -79,14 +78,6 @@ formPristine.addValidator(
   getLodgingPriceErrorMessage
 );
 
-lodgingPrice.addEventListener('blur', () => {
-  formPristine.validate();
-});
-
-priceSlider.noUiSlider.on('slide', () => {
-  formPristine.validate();
-});
-
 const validateRoomCapacity = (value) => {
   const roomCountValue = roomCount.value;
   switch (value) {
@@ -116,7 +107,4 @@ formPristine.addValidator(
   getRoomCapacityErrorMessage
 );
 
-adForm.addEventListener('submit', (evt) => {
-  evt.preventDefault();
-  formPristine.validate();
-});
+export { formPristine };
