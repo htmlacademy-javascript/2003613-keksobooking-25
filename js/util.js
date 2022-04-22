@@ -1,37 +1,54 @@
+const ALERT_SHOW_TIME = 5000;
 
-function getRandomPositiveInteger(a, b) {
+const getRandomPositiveInteger = function (a, b) {
   const lower = Math.ceil(Math.min(Math.abs(a), Math.abs(b)));
   const upper = Math.floor(Math.max(Math.abs(a), Math.abs(b)));
   const result = Math.random() * (upper - lower + 1) + lower;
   return Math.floor(result);
-}
+};
 
-function getRandomPositiveFloat(a, b, digits = 1) {
+const getRandomPositiveFloat = function (a, b, digits = 1) {
   const lower = Math.min(Math.abs(a), Math.abs(b));
   const upper = Math.max(Math.abs(a), Math.abs(b));
   const result = Math.random() * (upper - lower) + lower;
   return +result.toFixed(digits);
-}
+};
 
-function getRandomArrayItem(callback) {
-  return callback[getRandomPositiveInteger(0, callback.length - 1)];
-}
+const getRandomArrayItem = function (array) {
+  return array[getRandomPositiveInteger(0, array.length - 1)];
+};
 
-function getRandomArrayRange(callback) {
-  const max = getRandomPositiveInteger(0, callback.length - 1);
+const getRandomArrayPart = function (array) {
+  const max = getRandomPositiveInteger(0, array.length - 1);
   const min = getRandomPositiveInteger(0, max);
-  return callback.slice(min, max + 1);
-}
+  return array.slice(min, max + 1);
+};
 
-function isValidStringLength(str, min = 0, max = Infinity) {
+const getRandomArrayRange = function (array, rangeSize, filterFn) {
+  const filteredArray = filterFn(array);
+  const arrayItemsCount = filteredArray.length;
+  const rangeItemsCount = (rangeSize < arrayItemsCount) ? rangeSize : arrayItemsCount;
+  const rangeStartIndex = getRandomPositiveInteger(0, arrayItemsCount);
+  let resultArray = [];
+  if ((rangeStartIndex + rangeItemsCount) > arrayItemsCount) {
+    resultArray = resultArray.concat(filteredArray.slice(rangeStartIndex));
+    resultArray = resultArray.concat(filteredArray.slice(0, rangeStartIndex + rangeItemsCount - arrayItemsCount));
+    return resultArray;
+  }
+  const rangeEndIndex = rangeStartIndex + rangeItemsCount;
+  resultArray = resultArray.concat(filteredArray.slice(rangeStartIndex, rangeEndIndex));
+  return resultArray;
+};
+
+const isValidStringLength = function (str, min = 0, max = Infinity) {
   return str.length >= min && str.length <= max;
-}
+};
 
-function isValidNumRange(num, min = -Infinity, max = Infinity) {
+const isValidNumRange = function (num, min = -Infinity, max = Infinity) {
   return num >= min && num <= max;
-}
+};
 
-function disableElements (...elements) {
+const disableElements = function (...elements) {
   for (const element of elements){
     const elementChildren = element.children;
     for (const child of elementChildren) {
@@ -39,9 +56,9 @@ function disableElements (...elements) {
     }
     element.classList.add(`${element.classList[0]}--disabled`);
   }
-}
+};
 
-function enableElements (...elements) {
+const enableElements = function (...elements) {
   for (const element of elements){
     const elementChildren = element.children;
     for (const child of elementChildren) {
@@ -49,8 +66,7 @@ function enableElements (...elements) {
     }
     element.classList.remove(`${element.classList[0]}--disabled`);
   }
-}
-const ALERT_SHOW_TIME = 5000;
+};
 
 const showAlert = (message, element) => {
   const alertContainer = document.createElement('div');
@@ -63,16 +79,30 @@ const showAlert = (message, element) => {
   alertContainer.style.fontSize = '20px';
   alertContainer.style.textAlign = 'center';
   alertContainer.style.backgroundColor = 'red';
-
-
   alertContainer.textContent = message;
-
   element.append(alertContainer);
-
   setTimeout(() => {
     alertContainer.remove();
   }, ALERT_SHOW_TIME);
 };
+
+function debounce (callback, timeoutDelay = 500) {
+  // Используем замыкания, чтобы id таймаута у нас навсегда приклеился
+  // к возвращаемой функции с setTimeout, тогда мы его сможем перезаписывать
+  let timeoutId;
+
+  return (...rest) => {
+    // Перед каждым новым вызовом удаляем предыдущий таймаут,
+    // чтобы они не накапливались
+    clearTimeout(timeoutId);
+
+    // Затем устанавливаем новый таймаут с вызовом колбэка на ту же задержку
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+
+    // Таким образом цикл «поставить таймаут - удалить таймаут» будет выполняться,
+    // пока действие совершается чаще, чем переданная задержка timeoutDelay
+  };
+}
 
 export {
   enableElements,
@@ -80,8 +110,10 @@ export {
   getRandomPositiveInteger,
   getRandomPositiveFloat,
   getRandomArrayItem,
+  getRandomArrayPart,
   getRandomArrayRange,
   isValidStringLength,
   isValidNumRange,
   showAlert,
+  debounce,
 };

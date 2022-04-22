@@ -1,3 +1,5 @@
+import { getRandomArrayRange } from './util.js';
+import { filterData } from './map-filters.js';
 const POST_ADDRESS = 'https://25.javascript.pages.academy/keksobooking';
 const GET_ADDRESS = 'https://25.javascript.pages.academy/keksobooking/data';
 
@@ -6,9 +8,8 @@ const getData = (onSuccess, onFail) => {
     .then((response) => {
       if (response.ok) {
         return response.json()
-          .then((dataSet) => {
-            onSuccess(dataSet);
-          })
+          .then((dataSet) => getRandomArrayRange(dataSet, 10, filterData))
+          .then((dataSet) => onSuccess(dataSet))
           .catch(() => {
             onFail('Не удалось обработать данные');
           });
@@ -37,4 +38,5 @@ const sendData = (onSuccess, onFail, data) => {
       onFail();
     });
 };
+
 export {getData, sendData, POST_ADDRESS};

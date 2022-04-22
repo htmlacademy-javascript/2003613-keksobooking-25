@@ -1,7 +1,7 @@
-import {disableElements} from './util.js';
+import { disableElements } from './util.js';
 import { sendData, POST_ADDRESS } from './api.js';
 import { lodgingTypesMinPrice,lodgingTypesMaxPrice,} from './enum-data.js';
-import { initPinCoordinate, setMapDefault} from './map.js';
+import { initPinCoordinate, setMapDefault } from './map.js';
 import { formPristine } from './form-validate.js';
 
 const adForm = document.querySelector('.ad-form');
@@ -99,7 +99,6 @@ const setFormDefault = () => {
   initLodgingPrice();
   initSlider();
   initRoomCountCapacity();
-  setMapDefault();
   formPristine.reset();
 };
 
@@ -213,6 +212,8 @@ adForm.addEventListener('submit', (evt) => {
       adForm
     );
     unblockSubmitButton();
+    setFormDefault();
+    setMapDefault();
   } else {
     showMessage(errorMessage, errorMessageHandler);
   }
@@ -221,4 +222,5 @@ adForm.addEventListener('submit', (evt) => {
 ressetButton.addEventListener('click', (evt) => {
   evt.preventDefault();
   setFormDefault();
+  setMapDefault();
 });
