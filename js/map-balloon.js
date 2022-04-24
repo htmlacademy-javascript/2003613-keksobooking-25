@@ -1,4 +1,3 @@
-/* eslint-disable indent */
 import { LODGING_PROPERTIES } from './enum-data.js';
 
 const lodgingTypesText = Object.fromEntries(Object.entries(LODGING_PROPERTIES).map(([ key, val ]) => [ key, val.fieldText]));
@@ -30,22 +29,22 @@ const cbSetFeatures  = (element, propsArray, features) => {
   }
   features.forEach((featureItem) => {
     const featureItemClass = featureItem.classList[1];
-      if (!propsClassList.includes(featureItemClass)) {
+    if (!propsClassList.includes(featureItemClass)) {
       featureItem.remove();
-      }
-    });
+    }
+  });
 };
 
 const cbSetPhotos  = (element, propsArray, photoElement) => {
   const fragmet = document.createDocumentFragment();
   for (const item of propsArray){
-      const newImg = photoElement.cloneNode(true);
-      newImg.src = item;
-      fragmet.appendChild(newImg);
-    }
-    element.innerHTML='';
-    element.appendChild(fragmet);
-  };
+    const newImg = photoElement.cloneNode(true);
+    newImg.src = item;
+    fragmet.appendChild(newImg);
+  }
+  element.innerHTML='';
+  element.appendChild(fragmet);
+};
 
 const cardItemHandler = (element, obj, objProp, cbOnObjPropExist, appendix = null) => {
   if (!hasDefinedProperty(obj, objProp)){

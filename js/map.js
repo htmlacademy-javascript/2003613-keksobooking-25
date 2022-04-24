@@ -1,6 +1,8 @@
-import {enableElements, showAlert} from './util.js';
-import {getData} from './api.js';
-import {createBalloonContent} from './map-balloon.js';
+import { getData } from './api.js';
+import { enableElements, showAlert, debounce} from './util.js';
+import { createBalloonContent } from './map-balloon.js';
+
+const TIME_DELAY = 500;
 
 const initMapCoordinate = {
   lat: 35.683792,
@@ -17,18 +19,16 @@ const mapFilters = document.querySelector('.map__filters');
 const adForm = document.querySelector('.ad-form');
 const address = adForm.querySelector('#address');
 
-const map = L.map('map-canvas')
-  .setView({
-    lat: initMapCoordinate.lat,
-    lng: initMapCoordinate.lng,
-  }, 13);
+const cbMapOnLoadHandler = () => {
+  enableElements(adForm, mapFilters);
+};
 
-L.tileLayer(
+const mapTileLayer = L.tileLayer(
   'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
   {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
   },
-).addTo(map);
+);
 
 const mainPinIcon = L.icon({
   iconUrl: './img/main-pin.svg',
@@ -49,28 +49,7 @@ const mainPin = L.marker(
   },
 );
 
-const setMapDefault = () => {
-  const defaultLat = initMapCoordinate.lat;
-  const defaulLng = initMapCoordinate.lng;
-  map.closePopup();
-  map.setView({
-    lat: defaultLat,
-    lng: defaulLng,
-  });
-  mainPin.setLatLng([defaultLat,defaulLng]);
-};
-
-mainPin.addTo(map);
-
-map.on('load', () => {
-  enableElements(adForm, mapFilters);
-});
-
-mainPin.on('moveend', (evt) => {
-  address.setAttribute('value', `широта: ${Number(evt.target.getLatLng().lat).toFixed(6)}, долгота: ${Number(evt.target.getLatLng().lng).toFixed(6)}`);
-});
-
-const offerPinGroup = L.layerGroup().addTo(map);
+const offerPinGroup = L.layerGroup();
 
 const offerPinIcon = L.icon({
   iconUrl: './img/pin.svg',
@@ -95,12 +74,55 @@ const createOfferPin = (offer) => {
     .bindPopup(createBalloonContent(offer));
 };
 
-getData((dataSet) => {
-  dataSet.forEach((offer) => {
-    createOfferPin(offer);
-  });
-},
-(allertMessage) => {showAlert(allertMessage, mapContainer);}
-);
 
-export {initPinCoordinate, setMapDefault};
+const putPinsToMap = () => {
+  getData((dataSet) => {
+    dataSet.forEach((offer) => {
+      createOfferPin(offer);
+    });
+  },
+  (allertMessage) => {showAlert(allertMessage, mapContainer);}
+  );
+};
+
+const resetOffersPinsLayer = function () {
+  offerPinGroup.clearLayers();
+  putPinsToMap();
+};
+
+const initMap = function() {
+  const leafletObj = L.map('map-canvas');
+  leafletObj.setView({
+    lat: initMapCoordinate.lat,
+    lng: initMapCoordinate.lng,
+  }, 13);
+  leafletObj.whenReady(cbMapOnLoadHandler);
+
+  mapTileLayer.addTo(leafletObj);
+  mainPin.addTo(leafletObj);
+  offerPinGroup.addTo(leafletObj);
+  leafletObj.whenReady(putPinsToMap);
+  return leafletObj;
+};
+
+const map = initMap();
+
+const setMapDefault = () => {
+  const defaultLat = initMapCoordinate.lat;
+  const defaulLng = initMapCoordinate.lng;
+  map.closePopup();
+  map.setView({
+    lat: defaultLat,
+    lng: defaulLng,
+  });
+  mainPin.setLatLng([defaultLat,defaulLng]);
+  resetOffersPinsLayer();
+};
+
+mainPin.on('moveend', (evt) => {
+  address.setAttribute('value', `широта: ${Number(evt.target.getLatLng().lat).toFixed(6)}, долгота: ${Number(evt.target.getLatLng().lng).toFixed(6)}`);
+});
+
+mapFilters.addEventListener('change', debounce(() => {resetOffersPinsLayer();}, TIME_DELAY));
+
+export { initPinCoordinate, resetOffersPinsLayer, setMapDefault};

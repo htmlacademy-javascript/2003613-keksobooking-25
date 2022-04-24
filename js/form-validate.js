@@ -1,12 +1,5 @@
-import {
-  isValidStringLength,
-  isValidNumRange
-} from './util.js';
-
-import {
-  lodgingTypesMinPrice,
-  lodgingTypesMaxPrice
-} from './enum-data.js';
+import { isValidStringLength, isValidNumRange } from './util.js';
+import { lodgingTypesMinPrice, lodgingTypesMaxPrice } from './enum-data.js';
 
 const adForm = document.querySelector('.ad-form');
 const title = adForm.querySelector('#title');

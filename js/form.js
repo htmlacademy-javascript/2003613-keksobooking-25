@@ -1,7 +1,7 @@
-import {disableElements} from './util.js';
+import { disableElements } from './util.js';
 import { sendData, POST_ADDRESS } from './api.js';
 import { lodgingTypesMinPrice,lodgingTypesMaxPrice,} from './enum-data.js';
-import { initPinCoordinate, setMapDefault} from './map.js';
+import { initPinCoordinate, setMapDefault } from './map.js';
 import { formPristine } from './form-validate.js';
 
 const adForm = document.querySelector('.ad-form');
@@ -99,7 +99,6 @@ const setFormDefault = () => {
   initLodgingPrice();
   initSlider();
   initRoomCountCapacity();
-  setMapDefault();
   formPristine.reset();
 };
 
@@ -157,6 +156,14 @@ roomCount.addEventListener('change', () => {
   }
 });
 
+const blockSubmitButton = () => {
+  submitButton.disabled = true;
+};
+
+const unblockSubmitButton = () => {
+  submitButton.disabled = false;
+};
+
 const successRoutine = function (evt, message) {
   const routine = function () {
     if (evt.type === 'click' || evt.code === 'Escape'){
@@ -164,6 +171,9 @@ const successRoutine = function (evt, message) {
       formPristine.reset();
       message.remove();
     }
+    unblockSubmitButton();
+    setFormDefault();
+    setMapDefault();
   };
   return routine();
 };
@@ -194,14 +204,6 @@ const showMessage = (message, handler) => {
   handler(message);
 };
 
-const blockSubmitButton = () => {
-  submitButton.disabled = true;
-};
-
-const unblockSubmitButton = () => {
-  submitButton.disabled = false;
-};
-
 adForm.addEventListener('submit', (evt) => {
   evt.preventDefault();
   const isValid = formPristine.validate();
@@ -212,7 +214,6 @@ adForm.addEventListener('submit', (evt) => {
       () => {showMessage(errorMessage, errorMessageHandler);},
       adForm
     );
-    unblockSubmitButton();
   } else {
     showMessage(errorMessage, errorMessageHandler);
   }
@@ -221,4 +222,5 @@ adForm.addEventListener('submit', (evt) => {
 ressetButton.addEventListener('click', (evt) => {
   evt.preventDefault();
   setFormDefault();
+  setMapDefault();
 });
